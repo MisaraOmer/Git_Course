@@ -1,0 +1,3458 @@
+﻿
+@model RestaurantApp.Areas.Inventory.ViewModels.VmSellBill
+
+@using RestaurantApp.Settings.Models
+
+@{
+    ViewBag.Title = "Create";
+
+}
+
+
+<link href="~/Content/Styles/Assets/css/AdminLTE/AdminLTE.css" rel="stylesheet" />
+<link href="~/Content/Styles/Invoicestyle.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+    body {
+        direction: rtl;
+        font-family: 'calibrib', sans-serif;
+        font-size: 14px;
+        height: 100%;
+        background: #f9f9f9;
+    }
+    .select2-container--default .select2-selection--single, .select2-selection .select2-selection--single {
+        border: 1px solid #d2d6de;
+        /* border-radius: 0; */
+        padding: 6px 12px;
+        height: 34px;
+        border-radius: 23px;
+    }
+
+    .btn-group-vertical .btn.btn-flat:first-of-type, .btn-group-vertical .btn.btn-flat:last-of-type {
+        border-radius: 23px;
+    }
+
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+        background-color: #ecf0f5;
+    }
+
+    .table thead th {
+        text-align: center;
+        font-size: 17px;
+    }
+    .btn-info {
+        background-color: #adc0b7;
+        border-color: #f9f9f9;
+        border-radius: 23px;
+    }
+    .btn-info {
+        color: #000;
+        font-weight: 700;
+        font-size: large;
+    }
+        .btn-info:hover {
+            background-color: #476b5a;
+            border-color: #f9f9f9
+        }
+
+    .btn-info {
+        color: #000;
+    }
+    .form-control, output {
+        line-height: 1.42857143;
+        display: block;
+        font-size: 16px;
+        color: #555;
+    }
+
+    .badge, .label, dt, kbd kbd, label {
+        font-weight: 700;
+        font-size: 17px;
+    }
+
+    td p a.btn {
+        padding: 0px 12px !important;
+    }
+
+    .form-control:not(select) {
+    }
+
+    [class*="hint--"] {
+        position: relative;
+        right: 23px;
+        display: inline-block;
+    }
+
+    .IOX {
+        position: relative;
+        top: 15px;
+    }
+
+    table {
+        border-spacing: 6px;
+    }
+
+    .OBtns {
+        height: 52px !important;
+    }
+
+
+    .form-control {
+        background-color: none !important;
+    }
+
+    .BDetails {
+        position: relative;
+        align-content: center;
+        right: 179%;
+    }
+
+    .Itemspan {
+        position: relative;
+        align-content: center;
+        right: 385%;
+    }
+
+
+    .TxtBtns {
+        font-size: 14px;
+        position: relative;
+        top: 0px;
+        right: -10px;
+    }
+
+    .box.box-warning {
+        border-top-color: #f39c12;
+    }
+
+
+    @@media (min-width: 1200px) {
+        .container {
+            width: 104%;
+        }
+    }
+
+
+
+
+    .modal-header .close {
+        font-size: 28px;
+        font-weight: bold;
+        color: black;
+        margin-top: -2px;
+    }
+
+    .modal-header {
+        min-height: 16.43px;
+        padding: 15px;
+        border-bottom: none;
+    }
+
+    .panel {
+        margin-bottom: 20px;
+        margin: 10px 5px 0 5px;
+        background-color: #fff;
+        border: 1px solid #607779;
+        border-radius: 4px;
+        -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+
+
+
+    .form-horizontal .control-label {
+        text-align: right;
+    }
+
+    #MainSell {
+        height: 600px;
+    }
+
+
+    .Bar {
+        position: relative;
+        right: -53px;
+        width: 110%;
+    }
+
+    .ex1 {
+        background-color: white;
+        height: 100%;
+        width: 100%;
+        overflow-y: scroll;
+    }
+
+    .form-horizontal label {
+        text-align: unset;
+        font-weight: bold;
+    }
+
+    /*make view width 100%*/
+    #min-wrapper {
+        padding-right: 0 !important;
+        margin-top: -10px;
+    }
+    /*hide navigation bar*/
+    #left-navigation {
+        display: none !important;
+    }
+    /*to make view width 100%*/
+    #main-content {
+        padding: 0 !important;
+        min-height: 600px !important;
+    }
+    /*hide header elements*/
+    .DivUserInfo {
+        display: none;
+    }
+
+    .CasherTools {
+        display: none !important;
+    }
+
+    .dropdown-toggle {
+        display: none !important;
+    }
+
+    #BarSide {
+        display: none !important;
+    }
+    /*.deep-blue-color .navigation{
+        height:30px !important;
+    }*/
+    .top-navigation ul li a {
+        padding: 2px 0 !important;
+    }
+</style>
+
+
+
+
+
+
+<div id="MainSell" style="background-color: #ecf0f5;">
+
+
+    @using (Html.BeginForm("SaleCreate", "SaleBills", FormMethod.Post))
+    {
+
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.Inventory_ID)
+        @Html.HiddenFor(model => model.CashOnHand)
+        @Html.Hidden("Counx", 0)
+
+
+
+
+        <div class="col-md-12" style="background-color: #ecf0f5;height:100%;padding:15px">
+            @Html.ValidationSummary(true)
+
+            <div class="col-xl-5 col-lg-5 col-md-5 col-sm-5" style="padding-left: 0px !important;padding-right: 0px !important">
+
+                <div class="well well-sm">
+                    <div id="lefttop" style="margin-bottom:5px;margin-top: 10px;">
+                        <div class="form-group" style="margin-bottom:5px;">
+
+                            @Html.Label(ZeroRes.Meals, new { @class = "control-label col-md-2" , @style = "float: right;font-size: large;" }) 
+
+                            <div class="col-md-10" style="border-radius: 23px;">
+
+                                @Html.DropDownList("Meals", ViewBag.Meal_ID as SelectList, string.Empty, new { @class = "form-control js_single", @onchange = "GetItemSale(this)" })
+
+                            </div>
+ 
+                        </div>
+                    </div>
+
+
+                    <br /><br />
+
+
+
+                          <div id="print" class="fixed-table-container">
+
+                              <div class="slimScrollDiv" style="position: relative; overflow-y: scroll; width: auto; height: 407px !important;">
+
+                                  <div id="list-table-div" style="overflow: hidden; width: auto; height: 412px;">
+
+                                      <div class="fixed-table-header">
+
+
+                                          <table id="OrdersOrdersDynamicTable" class="table table-striped table-bordered table-hover" style="margin-left: -110px;">
+
+                                              <thead>
+
+                                                  <tr>
+                                                      <th>@ZeroRes.Name</th>
+                                                      <th>@ZeroRes.Price</th>
+                                                      <th>@ZeroRes.Quantity</th>
+                                                      <th>@ZeroRes.Total</th>
+                                                  </tr>
+
+                                              </thead>
+
+                                              <tbody>
+
+                                                  @if (Model.PriceTotal != 0)
+                                                  {
+                                                      foreach (var item in Model.Itmlst)
+                                                      {
+
+                                                          <tr id="@item.ID" onclick="PinRow(@item.ID)">
+
+                                                              <td>
+                                                                  @Html.DisplayFor(modelItem => item.Name)
+                                                              </td>
+
+
+                                                              <td style="display:none">
+
+                                                                  @Html.DisplayFor(modelItem => item.ID)
+                                                              </td>
+
+                                                              <td style="display:none">
+                                                                  <input type="text" value="@item.SellPrice" />
+                                                              </td>
+                                                              <td style="display:none"><input type="text" value='@item.SellPrice' /></td>
+                                                              @if (ViewBag.EnableSale == Const.Yes)
+                                                              {
+
+
+                                                                  <td><input type="number" id="Price_@item.ID" class="NumberPicker" value='@item.SellPrice' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,@item.ID)" /></td>
+
+                                                              }
+                                                              else
+                                                              {
+                                                                  <td>@item.SellPrice</td>
+                                                              }
+
+                                                              <td>
+                                                                  <input type="number" id="QTY_@item.ID" class="NumberPicker" value="@item.NewQuantity" min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,@item.ID)">
+                                                              </td>
+
+                                                              @{
+                                                                  var total = item.NewQuantity * item.SellPrice;
+                                                              }
+                                                              <td>
+                                                                  <input style="border:none" id="Total_@item.ID" readonly="" type="text" value="@total">
+                                                              </td>
+
+                                                              <td>
+                                                                  <p aria-label="حذف" class="hint--top-right hint--error"> <a data-itemid="0" href="#" class="deleteItem btn btn-danger btn-small glyphicon glyphicon-remove  hvr-bounce-out"> </a> </p>
+                                                              </td>
+
+                                                          </tr>
+                                                      }
+                                                  }
+
+
+                                              </tbody>
+
+                                          </table>
+
+                                      </div>
+
+                                  </div>
+
+                              </div>
+
+
+
+                              <div style="clear:both;">
+
+                              </div>
+
+
+
+                              <div>
+
+                                  <div style="margin-right: 0px;margin-left: 0px;background: #d9edf7;padding: 5px;border-top: 1px solid #f4f4f4;">
+                                      <label class="text-right" style="font-weight:unset !important;">مجموع الطلبات</label>
+                                      <label style="float:left;font-weight:unset !important;"><span id="PriceTotalLbl">0.00</span></label>
+                                  </div>
+
+                                  <div style="margin-right: 0px;margin-left: 0px;background: #bac3c8;padding: 5px;border-top: 1px solid #f4f4f4;">
+                                      <label class="text-right" style="font-weight:unset;">الخصم</label>
+                                      <label style="float:left;font-weight:unset !important;"><span>0.00</span></label>
+                                  </div>
+
+                                  <div style="margin-right: 0px;margin-left: 0px;background: #95d8fa;padding: 5px;border-top: 1px solid #f4f4f4;">
+                                      <label class="text-right" style="font-weight:unset;">الضريبة</label>
+                                      <label style="float:left;font-weight:unset !important;"><span>0.00</span></label>
+                                  </div>
+
+                                  <div style="margin-right: 0px;margin-left: 0px;background: #dff0d8;padding: 5px;border-top: 1px solid #f4f4f4;">
+                                      <label class="text-right" style="font-weight:bold;">إجمالي المدفوع</label>
+                                      <label class="text-left" style="font-weight:bold;float:left;"><span>0.00</span></label>
+                                      <input id="PriceTotal" hidden />
+                                      <input id="NoBill" hidden value="@Model.NoBill" />
+                                  </div>
+
+                              </div>
+
+                          </div>
+                    
+                </div>
+
+            </div>
+
+
+            <div class="col-xl-7 col-lg-7 col-md-7 col-sm-7" style="padding-right: 0px !important;padding-left: 5px !important;">
+
+                <div class="well well-sm" style="padding: 0px !important;">
+
+                    <div class="slimScrollDiv" style="position: relative; width: auto; height: 250px;">
+
+                        <div class="items" style="overflow-y: scroll; width: auto; height: 290px;">
+
+
+                            @foreach (var item in ViewBag.CategoriesWithMeals)
+                            {
+
+                                <button type="button" class="btn btn-both btn-flat product" style="background: 0 0; padding: 3px;text-align: center;margin-top: 0px;width:92px !important; " onclick="myFunction(@item.ID)"><span class="bg-img" style="background: #fff; height: 83px; padding: 2px; overflow: hidden; white-space: pre-wrap; display: block; width: 83px; "><img src="~/Content/Styles/Images/Food.png" style="width: 80px; height: 80px; border: 0; vertical-align: middle;"></span><span><span style="display: block; background: #e5e5e5; height: 40px; overflow: hidden; white-space: pre-wrap;line-height: 35px;">@item.Name</span></span></button>
+
+                            }
+
+
+
+                            <br />
+
+
+                            @foreach (var item in ViewBag.CategoriesWithMeals)
+                            {
+                                <div id="@item.ID" class="MenuList" style="display: none;">
+                                    @foreach (var meal in item.Meals)
+                                    {
+
+                                        <button type="button" onclick="AddToTable(@meal.ID,'@meal.Name', @meal.SellPrice ,1)" class="btn2 btn-default" style="border-color:gray;padding: 5px 23px !important;">
+
+                                            <div class="col-12">
+                                                <row>@meal.Name</row>
+                                                <br />
+                                                <row>(@meal.SellPrice $)</row>
+                                            </div>
+
+                                        </button>
+
+                                    }
+
+
+                                </div>
+
+                            }
+
+
+                        </div>
+
+
+                        <div class="col-md-12 row">
+
+                            <div class="col-xs-3" style="padding: 0 5px;">
+                                <div class="btn-group-vertical btn-block">
+                                    <button type="button" class="btn btn-danger btn-block btn-flat" onclick="ClearPageSale()" style="padding: 9px 0px !important;">الغاء (F6)</button>
+                                </div>
+                            </div>
+
+
+                            <div class="col-xs-3" style="padding: 0 5px;">
+                                <div class="btn-group-vertical btn-block">
+                                    <button type="button" class="btn btn-warning btn-block btn-flat" style="padding: 9px 0px !important;" onclick="GetPendingBills()"> الفواتير المعلقة</button>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-3" style="padding: 0 5px;">
+                                <div class="btn-group-vertical btn-block">
+                                    <button type="button" class="btn btn-warning btn-block btn-flat" style="padding: 9px 0px !important;background-color: #2c7667" id="SavePendingOrder">تعليق فاتورة (F8)</button>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-3" style="padding: 0 5px;">
+                                <div class="btn-group-vertical btn-block">
+                                    <button type="button" class="btn btn-success btn-block btn-flat" id="PayDetails" style="padding: 9px 0px !important;">(F9) بيع</button>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+
+                        <br /><br />
+
+
+
+                              <div class="col-xs-12">
+
+
+                                  <!---------  Key Board Number  ------------------------>
+                                  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-top:5px;padding-right:40px;padding-left:0 !important; /*margin-right: 27px !important;
+    margin-left: -27px !important;*/">
+
+
+                                      <div class="row text-center mb-2" style="margin-right: -85px !important;">
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn3" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">3</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn2" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">2</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn1" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">1</span></button>
+                                          </div>
+
+                                      </div>
+
+                                      <div class="row text-center mb-2" style="margin-right: -85px !important;">
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn6" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">6</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn5" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">5</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn4" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">4</span></button>
+                                          </div>
+                                      </div>
+
+                                      <div class="row text-center mb-2" style="margin-right: -85px !important;">
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn9" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">9</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn8" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">8</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn7" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">7</span></button>
+                                          </div>
+
+                                      </div>
+
+                                      <div class="row text-center mb-2" style="margin-right: -85px !important;">
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="allClear" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">C</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btn0" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">0</span></button>
+                                          </div>
+
+                                          <div>
+                                              <button type="button" class=" btn-info col-xl-3 col-lg-3 col-md-3 col-sm-3 col-xs-3 design" id="btnDot" style="padding-top: 10px !important;padding-bottom: 18px !important;"><span style="position:relative;top:6px;font-size:larger;">.</span></button>
+                                          </div>
+
+                                      </div>
+                                  </div>
+
+
+
+                                  <br /><br />
+
+
+
+                                        <div class="col-xl-8 col-lg-8 col-md-6 col-sm-8 col-xs-8" style="padding:0 !important;float:right;">
+
+                                            <div>
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-right:0 !important;">
+
+                                                    @Html.Label(ZeroRes.Pay, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.DropDownListFor(model => model.PaymentType, DataList.SalePayType(), new { @style = "  border-radius:23px;", @class = "form-control", @onchange = "BankSale(this)" })
+
+                                                        @Html.ValidationMessageFor(model => model.PaymentType)
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-right:0 !important;">
+
+                                                    @Html.Label(ZeroRes.Customers, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.DropDownListFor(model => model.Company_ID, ViewBag.Customers_ID as SelectList, new { @class = "form-control" })
+
+                                                        @Html.ValidationMessageFor(model => model.Customers_ID)
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+
+                                            <br /> <br />
+                                            <br /> <br />
+
+
+
+
+                                            <div>
+
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-right:0 !important;">
+
+                                                    @Html.Label(ZeroRes.Discount, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.TextBoxFor(model => model.Discount, new { @class = "form-control NumberPicker", @type = "number", @min = "0", @max = "60" })
+
+                                                        @Html.ValidationMessageFor(model => model.Discount)
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="display:none;padding-right:0 !important;" id="DivChequeBank">
+
+                                                    @Html.Label(ZeroRes.Bank, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.DropDownListFor(model => model.ChequeBank, ViewBag.Banks_ID as SelectList, string.Empty, new { @class = "form-control" })
+
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+
+
+
+                                            <div>
+
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" id="DDLOrderType" style="padding-right:0 !important;">
+
+                                                    @Html.Label(ZeroRes.OrderType, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.DropDownListFor(model => model.OrderType, ViewBag.OrderType as SelectList, string.Empty, new { @class = "form-control" })
+
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="display:none;padding-right:0 !important;" id="DDLTable">
+
+                                                    @Html.Label(ZeroRes.Table, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.DropDownListFor(model => model.Table_ID, ViewBag.Table_ID as SelectList, string.Empty, new { @class = "form-control" })
+
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+
+
+
+                                            <div>
+
+
+                                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="display:none;padding-right:0 !important;" id="DDLDelveryMan">
+
+                                                    @Html.Label(ZeroRes.DelevryMan, new { @class = "control-label" })
+
+                                                    <div>
+
+                                                        @Html.DropDownListFor(model => model.DelevryMan_ID, ViewBag.DelevryMan_ID as SelectList, string.Empty, new { @class = "form-control" })
+
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div id="DivBankCash">
+
+                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-right:0 !important;">
+
+                                                        @Html.Label(string.Format("{0} {1}", ZeroRes.Amount, ZeroRes.Cash), new { @class = "control-label" })
+
+                                                        <div>
+
+                                                            @Html.TextBoxFor(model => model.Cash_Amount, new { @class = "form-control" })
+
+
+                                                        </div>
+
+
+                                                    </div>
+
+
+                                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6" style="padding-right:0 !important;">
+
+                                                        @Html.Label(string.Format("{0} {1}", ZeroRes.Amount, ZeroRes.Bank), new { @class = "control-label" })
+
+                                                        <divs>
+
+                                                            @Html.TextBoxFor(model => model.Bank_Amount, new { @class = "form-control" })
+
+
+                                                        </divs>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+
+
+                                  <br /><br />
+
+
+                                  <div style="display:none;padding-right:0 !important;" id="DivDeferred">
+
+                                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
+                                          @Html.Label(ZeroRes.PaidAmount, new { @class = "control-label" })
+
+                                          <div>
+
+                                              @Html.TextBoxFor(model => model.Loan_PaidAmount, new { @class = "form-control", @onchange = "CalcRemend(this)" })
+
+
+                                          </div>
+
+
+                                      </div>
+
+
+                                      <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                          5
+                                          @Html.Label(ZeroRes.RemainingAmount, new { @class = "control-label" })
+
+                                          <div>
+
+                                              @Html.TextBoxFor(model => model.Loan_RemainedAmount, new { @class = "form-control", @readonly = "true" })
+
+
+                                          </div>
+
+                                      </div>
+
+                                  </div>
+
+
+
+                              </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    }
+
+
+</div>
+
+
+
+
+
+<!---------------- Modal For Payment Dialy  --------------------------------------------------->
+
+<div class="modal fade" id="PayModal" role="dialog">
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+
+            <div class="modal-header" style="padding:35px 50px;">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <h4 style="text-align:center"><span class="glyphicon glyphicon-do"></span> @ZeroRes.Details @ZeroRes.Pay</h4>
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+
+                <div id="DivCashBank" class="col-md-12" style="display:none;">
+
+
+                    <div class="col-md-6" style="position: relative; bottom: 20px;margin-bottom: 13px;">
+
+                        @Html.Label(string.Format("{0} {1}", ZeroRes.Amount, ZeroRes.Cash), new { @class = "control-label col-md-6" })
+
+                        <div class="col-md-12">
+
+                            @Html.TextBox("CashAmount", null, new { @class = "form-control" })
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="col-md-6" style="position: relative; bottom: 20px;margin-bottom: 13px;">
+
+                        @Html.Label(string.Format("{0} {1}", ZeroRes.Amount, ZeroRes.Bank), new { @class = "control-label col-md-6" })
+
+                        <div class="col-md-12">
+
+                            @Html.TextBox("BankAmount", null, new { @class = "form-control" })
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="col-md-12">
+
+
+                    <div class="col-md-6" style="position: relative; bottom: 20px;margin-bottom: 13px;">
+
+                        @Html.Label(ZeroRes.PriceTotal, new { @class = "control-label col-md-6" })
+
+                        <div class="col-md-12">
+
+                            @Html.TextBox("SMBill", null, new { @class = "form-control", @readonly = "true" })
+
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="col-md-6" style="position: relative; bottom: 20px;margin-bottom: 13px;">
+
+                        @Html.Label(ZeroRes.EstimatedAmount, new { @class = "control-label col-md-12" })
+
+                        <div class="col-md-12">
+
+                            @Html.TextBoxFor(model => model.EstimatedAmount, new { @class = "form-control" })
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
+
+                <div class="col-md-12" style="margin-bottom:38px;">
+
+
+                    <div class="col-md-8">
+
+
+                        @Html.Label(ZeroRes.RecievAmount, new { @class = "control-label col-md-6" })
+
+                        <div class="col-md-12">
+
+                            @Html.TextBoxFor(model => model.RecievAmount, new { @class = "form-control", @onchange = "AmountRemind(this)" })
+
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        @Html.Label(ZeroRes.SameBillVal, new { @class = "control-label col-md-6", @style = "width: 93%;" })
+
+                        <div class="col-md-12">
+
+                            @Html.CheckBox("SMBillVal", new { @class = "form-control", @onclick = "DuplecatBillVal()" })
+
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+
+
+
+                <div class="col-md-12">
+
+                    <div class="form-group" style="margin-bottom: 110px;">
+
+                        @Html.Label(ZeroRes.RemainingAmount, new { @class = "control-label col-md-6" })
+
+                        <div class="col-md-12">
+
+                            @Html.TextBoxFor(model => model.RemindAmount, new { @class = "form-control", @readonly = "true" })
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+            </div>
+
+
+
+            <div class="modal-footer" style="margin: 254px 0 10px 0;">
+
+
+                <center>
+
+                    <button id="saveOrder" type="submit" class="btn  btn-success" data-dismiss="modal">(F4) @ZeroRes.Save</button>
+
+                    &nbsp;&nbsp;
+
+
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">@ZeroRes.Cancel</button>
+
+
+                </center>
+
+
+            </div>
+
+
+
+            <br /><br />
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!---------------- Modal For Pending Bills  --------------------------------------------------->
+
+<div class="modal fade" id="PendingModal" role="dialog">
+
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+
+            <div class="modal-header" style="padding:35px 50px;">
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                <h4 style="text-align:center"><span class="glyphicon glyphicon-do"></span> @ZeroRes.Pending @ZeroRes.Bills</h4>
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <div class="col-md-12">
+
+
+                    <table id="PindingBillsTable" class="table table-striped table-bordered table-hover" style="margin-left: -110px;">
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    @Html.DisplayName(ZeroRes.NoBill)
+                                </th>
+
+
+
+                                <th>
+                                    @Html.DisplayName(ZeroRes.PaymentMethod)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayName(ZeroRes.Discount)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayName(ZeroRes.PriceTotal)
+                                </th>
+
+                                <th>
+                                    @Html.DisplayName(ZeroRes.EnteredDate)
+                                </th>
+
+
+                                <th> </th>
+                            </tr>
+
+
+
+                        </thead>
+                        <tbody></tbody>
+
+                    </table>
+
+
+
+                </div>
+
+            </div>
+
+
+
+            <div class="modal-footer" style="margin: 254px 0 10px 0;">
+
+
+                <center>
+
+
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">@ZeroRes.Cancel</button>
+
+
+                </center>
+
+
+            </div>
+
+
+
+            <br /><br />
+
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!---------------- Modal For Sales Dialy  --------------------------------------------------->
+<div class="container">
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+
+
+                <div class="modal-header" style="padding:35px 50px;">
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+                    <h4 style="text-align:center"><span class="glyphicon glyphicon-do"></span> @ZeroRes.Details @ZeroRes.SalesDay</h4>
+
+                </div>
+
+
+                <div class="modal-body">
+
+
+
+                    <table class="table">
+
+
+                        <tr>
+
+                            <th style="border-bottom: 1px solid #008d4c; border-top: 1px solid #008d4c;">
+                                @ZeroRes.CashOnHand
+                            </th>
+
+
+
+                            <td class="CashOnHand" style="text-align:right; border-bottom: 1px solid #008d4c; border-top: 1px solid #008d4c;">
+                                21500
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th style="border-bottom: 1px solid #008d4c; border-top: 1px solid #008d4c;">
+                                @ZeroRes.Sales @ZeroRes.Cash
+                            </th>
+
+                            <td class="SaleCash" style="text-align:right; border-bottom: 1px solid #008d4c; border-top: 1px solid #008d4c;">
+                                21500
+                            </td>
+
+                        </tr>
+
+
+
+
+                        <tr>
+
+                            <th style="border-bottom: 1px solid #008d4c;">
+                                @ZeroRes.Sales @ZeroRes.CardBank
+                            </th>
+
+                            <td class="SaleBank" style="text-align:right; border-bottom: 1px solid #008d4c;">
+                                21500
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th style="border-bottom: 1px solid #008d4c;">
+                                @ZeroRes.Total @ZeroRes.Sales
+                            </th>
+
+                            <td class="TotalSales" style="text-align:right; border-bottom: 1px solid #008d4c;">
+                                21500
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+
+                            <th style="border-bottom: 1px solid #f11a10;">
+                                @ZeroRes.Total @ZeroRes.Expenses
+                            </th>
+
+                            <td class="TotalExpenses" style="text-align:right; border-bottom: 1px solid #f11a10;">
+                                0
+                            </td>
+
+                        </tr>
+
+
+
+
+
+                        <tr>
+
+                            <th>
+                                مجموع الكاش
+                            </th>
+
+                            <td class="TotalCasher">
+                                0
+                            </td>
+
+                        </tr>
+
+
+
+
+
+                    </table>
+
+
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+@section Scripts
+{
+
+
+    <script src="~/Content/Styles/Assets/css/AdminLTE/adminlte.min.js"></script>
+
+    <script src="~/Content/Styles/Assets/css/AdminLTE/demo.js"></script>
+
+
+
+
+
+    <script>
+
+        var RowID = 0;
+
+		$(document).ready(function ()
+		{
+
+            $('.CasherTools').show();
+
+            //$('.NumberPicker').numbercontrol();
+
+
+            $("#myBtn").click(function ()
+            {
+
+				$("#myModal").modal();
+
+            });
+
+
+
+
+			$("#left-navigation").addClass('active');
+
+			$("#min-wrapper").addClass('active');
+
+
+			$("#UlMain").addClass('active');
+
+
+		});
+
+
+
+
+		$("#PayDetails").click(function ()
+		{
+
+			$("#PayModal").modal();
+
+            var PriceTotalVal = document.getElementById("PriceTotal").value;
+
+
+            var TaxVal = PriceTotalVal * @VAT.VAT_Val / 100;
+
+            var VATotalVal = Number(PriceTotalVal) + Number(TaxVal);
+
+
+            var DiscountVal = document.getElementById("Discount").value;
+
+            var TotalBill = Number(VATotalVal) - Number(DiscountVal);
+
+
+            document.getElementById("SMBill").value = "";
+
+            document.getElementById("SMBill").value = TotalBill;
+
+
+		});
+
+
+
+
+		document.addEventListener("keydown", function (e)
+		{
+
+
+			//-- When Press Keyoard F9 --------------
+
+			if (e.keyCode == 120)
+			{
+
+				$("#PayModal").modal();
+
+                var PriceTotalVal = document.getElementById("PriceTotal").value;
+
+                var TaxVal = PriceTotalVal * 15 / 100;
+
+                var VATotalVal = PriceTotalVal + TaxVal;
+
+
+                var DiscountVal = document.getElementById("Discount").value;
+
+                var TotalBill = Number(VATotalVal) - Number(DiscountVal);
+
+
+				document.getElementById("SMBill").value = "";
+
+                document.getElementById("SMBill").value = TotalBill;
+
+
+			}
+			else if (e.keyCode == 119) {
+
+				myPendingOrder();
+
+
+			}
+			else if (e.keyCode == 117) {
+
+				ClearPageSale();
+
+
+			}
+			else if (e.keyCode == 115)
+			{
+
+
+				$("#PayModal").modal('toggle');
+
+
+				var PayVal = document.getElementById('PaymentType').value;
+
+				var CashVal = document.getElementById('CashAmount').value;
+
+				var BankVal = document.getElementById('BankAmount').value;
+
+				var ChequeBankVal = document.getElementById('ChequeBank').value;
+
+				if (PayVal == "CashBank")
+				{
+
+					if (CashVal == 0 || CashVal == "" || BankVal == 0 || BankVal == "")
+					{
+						toastr.error('الرجاء مراجعة مبلغ النقد او مبلغ البنك !');
+
+						return false
+					}
+					else if (ChequeBankVal == "")
+					{
+						toastr.error('الرجاء اختيار اسم البنك !');
+
+						$("#PayModal").modal('toggle');
+
+						document.getElementById('ChequeBank').focus();
+
+						return false
+					}
+
+				}
+
+
+
+				var RecpVal = document.getElementById('RecievAmount').value;
+
+					if (RecpVal == 0 || RecpVal == "")
+					{
+						toastr.error('المبلغ المستلم اقل من 1');
+
+						return false
+					}
+
+
+					var orderArr = [];
+
+					orderArr.length = 0;
+
+                $.each($("#OrdersOrdersDynamicTable tbody tr"), function ()
+				{
+
+						orderArr.push(
+							{
+
+
+								Name: $(this).find('td:eq(0)').html(),
+
+								NewQuantity: $(this).find('td:eq(1) input').val(),
+
+								SellPrice: $(this).find('td:eq(2)').html(),
+
+								ID: $(this).find('td:eq(3)').html(),
+
+								UnitType_ID: $(this).find('td:eq(5)').html(),
+
+
+							});
+
+					});
+
+
+					var CheqBankVal = "";
+
+					var VGB = $("#ChequeBank").css("display");
+
+					if (VGB != "none")
+					{
+						CheqBankVal = $("#ChequeBank").val()
+					}
+
+
+
+
+					var data = JSON.stringify(
+						{
+
+
+							NoBill: $('#NoBill').val(),
+
+							PriceTotal: $('#PriceTotal').val(),
+
+							Inventory_ID: $('#Inventory_ID').val(),
+
+							Discount: $('#Discount').val(),
+
+							PaymentType: $('#PaymentType').val(),
+
+							Company_ID: $('#Company_ID').val(),
+
+
+							EstimatedAmount: $('#EstimatedAmount').val(),
+
+							RecievAmount: $('#RecievAmount').val(),
+
+							RemindAmount: $('#RemindAmount').val(),
+
+
+							ChequeBank: CheqBankVal,
+
+							RateBillVAT: $('#RateBillVAT').val(),
+
+
+							CashAmount: $('#CashAmount').val(),
+
+							BankAmount: $('#BankAmount').val(),
+
+                            OrderType: $('#OrderType').val(),
+                            Table_ID: $('#Table_ID').val(),
+                            DelevryMan_ID: $('#DelevryMan_ID').val(),
+
+							vmSellItems: orderArr
+
+
+						});
+
+
+					if (orderArr.length != 0)
+					{
+
+
+						$.when(saveOrder(data)).then(function (response)
+						{
+							console.log(response);
+
+						}).fail(function (err)
+						{
+							console.log(err);
+						});
+
+					}
+					else
+					{
+						toastr.error('@ZeroRes.InsertItems');
+				    }
+
+
+
+			}
+			else
+			{
+				return false;
+			}
+
+
+
+		})
+
+
+
+
+		$('#PayModal').on('shown.bs.modal', function ()
+		{
+
+			var PayTypeVal = document.getElementById('PaymentType').value;
+
+			if (PayTypeVal == "CashBank")
+			{
+
+				$('#EstimatedAmount').val('');
+
+				$('#RecievAmount').val('');
+
+				$('#CashAmount').focus();
+
+
+			}
+			else
+			{
+				$('#EstimatedAmount').val('');
+
+				$('#RecievAmount').val('');
+
+				$('#EstimatedAmount').focus();
+			}
+
+
+
+		})
+
+
+        function CalcRemend(RS) {
+
+            PaidVal = RS.value;
+
+            var Bill_Total = document.getElementById('PriceTotal').value;
+
+
+            if (Number(PaidVal) < Number(Bill_Total)) {
+
+                if (Bill_Total > 0 && PaidVal > 0) {
+                    document.getElementById('Loan_RemainedAmount').value = Number(Bill_Total) - Number(PaidVal);
+                }
+                else {
+                    return false;
+                }
+
+
+            }
+            else {
+
+                $('#Loan_PaidAmount').val('');
+
+                alert('المبلغ المدفوع اكير من اجمالي الفاتورة');
+
+
+            }
+
+
+
+
+        }
+
+        function GetPendingBills()
+        {
+            debugger
+             $.ajax({
+
+                contentType: 'application/json; charset=utf-8',
+
+                dataType: 'json',
+                        
+                type: 'POST',
+
+                url: "/Inventory/SaleBills/GetPendingBills",
+
+
+                success: function (result)
+                {
+                    debugger
+                    if (result.Status == "Done")
+                    {
+                        var Data = result.PindingBills;
+                        var temp = "";
+                        $("#PindingBillsTable tbody tr").remove();
+                        for (var i = 0; i < Data.length; i++) {
+                            temp = '<tr id="' + Data[i].NoBill + '"><td>' + Data[i].NoBill + '</td> <td>' + Data[i].PaymentType + '</td> <td> ' + Data[i].Discount + ' </td> <td>' + Data[i].PriceTotal + '</td><td>' + Data[i].EnteredDate + '</td> <td><a data-itemId="0" herf="#" onclick="BillView(' + Data[i].ID  +')" class="btn btn-primary glyphicon glyphicon-edit  hvr-bounce-out"><p aria-label=" @ZeroRes.BackSaleBill" class="hint--top-right hint--info"></p></a></td></tr>';
+                            
+                            $("#PindingBillsTable tbody").append(temp);
+                           
+                        }
+                       
+
+                        $("#PendingModal").modal();
+
+                    }
+
+                },
+                error: function ()
+                {
+                    debugger
+                    toastr.error('@ZeroRes.NotSave');
+
+
+                }
+
+
+            });
+
+        }
+
+        function GetItemSale(RS)
+        {
+
+
+
+            var DropID = RS.value;
+
+            if (DropID == "")
+            {
+                return false;
+            }
+
+
+                     CounxVal = document.getElementById("Counx").value;
+
+                    if (CounxVal == 0)
+                    {
+
+                        document.getElementById("Counx").value = 1;
+
+                        CounxVal++;
+
+                    }
+                    else
+                    {
+
+                        CounxVal++;
+
+
+                        document.getElementById("Counx").value = CounxVal;
+
+                    }
+
+
+
+            OrdersDynamicTable = $("#OrdersOrdersDynamicTable tbody");
+
+
+            var input = { ID: DropID };
+
+
+            var urlx = "/Inventory/SaleBills/GetSerialItemByID";
+
+
+
+                    $.ajax({
+
+                        url: urlx,
+
+                        type: 'GET',
+
+                        DataType: 'json',
+
+                        //data: JSON.stringify(input),
+
+                        contentType: 'application/json; charset=utf-8',
+
+                        data: input,
+
+				        success: function (Data)
+                        {
+
+                            debugger
+
+					        if (Data.Name != undefined)
+                            {
+                                if ($("#Total_" + Data.ID).length) {
+                                    var item = $("QTY_" + Data.ID);
+                                    CalcTotalByClick(item, Data.ID);
+                                } else {
+
+
+
+                                var _total = Number(Data.Quantity) * Number(Data.SellPrice);
+                                    var OrderOrdersDynamicTable = $("#OrdersOrdersDynamicTable");
+
+                                    if ('@ViewBag.EnableSale' == '@Const.Yes') {
+                                        productItem = '<tr id="' + Data.ID + '" onclick="PinRow(' + Data.ID + ')" ><td>' + Data.Name + '</td> <td style="display:none">' + Data.ID + '</td> <td style="display:none"><input type="text"  value = ' + Data.SellPrice + ' /></td> <td><input id="Price_' + Data.ID + '" type="number" class="NumberPicker text-center"  value=' + Data.SellPrice + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,' + Data.ID + ')" /></td>   <td><input  type="number" id="QTY_' + Data.ID + '" class="NumberPicker text-center"  value=' + Data.Quantity + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,' + Data.ID + ')" /></td> <td><input style="border:none" id="Total_' + Data.ID + '" readonly type="text"   value = ' + _total + ' /></td><td> <p aria-label="@ZeroRes.Remove" class="hint--top-right hint--error"> <a data-itemId="0" href="#" style="color:red;" class="deleteItem btn btn-small glyphicon glyphicon-trash  hvr-bounce-out"> </a> </p> </td></tr>';
+
+                             } else {
+                                // Bind form values in HTML row tamplate
+                                        productItem = '<tr id="' + Data.ID + '" onclick="PinRow(' + Data.ID + ')" ><td>' + Data.Name + '</td> <td style="display:none">' + Data.ID + '</td> <td style="display:none"><input class="text-center" id="Price_' + Data.ID + '" type="text"  value = ' + Data.SellPrice + ' /></td> <td>' + Data.SellPrice + '</td>   <td><input class="text-center" type="number" id="QTY_' + Data.ID + '" style="border:none"  value=' + Data.Quantity + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,' + Data.ID + ')" /></td> <td><input class="NumberPicker text-center" id="Total_' + Data.ID + '" readonly type="text"   value = ' + _total + ' /></td><td> <p aria-label="@ZeroRes.Remove" class="hint--top-right hint--error"> <a data-itemId="0" href="#" style="color:red;" class="deleteItem btn btn-small glyphicon glyphicon-trash  hvr-bounce-out"> </a> </p> </td></tr>';
+
+                                }
+
+                                   // add the row to table
+                                OrderOrdersDynamicTable.append(productItem);
+
+                                CalcBillTotal();
+                                }
+					        }
+					        else  if (Data.Status = "BarCode Not Found!")
+                            {
+
+						        alert("BarCode Not Found!");
+
+						        clearItem();
+
+					        }
+					        else
+                            {
+                                return false;
+					        }
+
+
+
+                        },
+                        error: function ()
+                        {
+					        window.location.reload();
+                        }
+
+
+			        });
+
+
+        }
+
+
+        function CalcBillTotal() {
+
+            var _total = 0;
+
+            $.each($("#OrdersOrdersDynamicTable tbody tr"), function () {
+
+                _total += Number($(this).find('td:eq(5) input').val());
+            });
+            $("#PriceTotal").val(_total);
+            $("#PriceTotalLbl").html(_total);
+        }
+
+        function PinRow(ID) {
+            debugger
+            RowID = ID;
+            $("#" + ID).css("color", "blue");
+        }
+
+		function AmountRemind(RS)
+		{
+
+			var EstimatedAmountVal = document.getElementById("EstimatedAmount").value;
+
+            var RecievAmountVal = RS.value;
+
+
+            if (EstimatedAmountVal == 0)
+            {
+
+                var TotalBill = document.getElementById('SMBill').value;
+
+                document.getElementById("RemindAmount").value = + Number(RecievAmountVal) - Number(TotalBill);
+
+            }
+            else
+            {
+                document.getElementById("RemindAmount").value = + Number(RecievAmountVal) - Number(EstimatedAmountVal);
+            }
+
+
+
+		}
+
+        $("#DDLOrderType").change(function () {
+            debugger
+
+            var PayVal = $("#DDLOrderType option:selected").val();
+
+			if (PayVal == '@Const.Delvery')
+            {
+                $('#DDLDelveryMan').show();
+
+                $('#DDLTable').hide();
+
+                $('#Table_ID').val("");
+
+            }
+            if (PayVal == '@Const.TakeAway')
+            {
+
+                $('#DDLDelveryMan').hide();
+
+                $('#DDLTable').hide();
+
+
+                $('#DelevryMan_ID').val("");
+
+                $('#Table_ID').val("");
+
+            }
+			else if (PayVal == '@Const.InTable')
+            {
+
+                $('#DDLTable').show();
+
+                $('#DDLDelveryMan').hide();
+
+                $('#DelevryMan_ID').val("");
+
+			}
+
+        });
+
+
+
+
+		function BankSale(RS)
+		{
+
+			var PayVal = RS.value;
+
+
+			if (PayVal == "Cash")
+			{
+
+                $('#DivChequeBank').hide();
+
+                $('#DivBankCash').hide();
+
+                $('#DivDeferred').hide();
+
+
+
+                $('#Loan_PaidAmount').val('');
+
+                $('#Loan_RemainedAmount').val('');
+
+
+                $('#Cash_Amount').val('');
+
+                $('#Bank_Amount').val('');
+
+
+
+            }
+            if (PayVal == '@Const.Bank')
+            {
+
+
+                $('#DivChequeBank').show();
+
+                $('#DivBankCash').hide();
+
+                $('#DivDeferred').hide();
+
+
+                $('#Loan_PaidAmount').val('');
+
+                $('#Loan_RemainedAmount').val('');
+
+
+                $('#Cash_Amount').val('');
+
+                $('#Bank_Amount').val('');
+
+
+            }
+			else if (PayVal == "CashBank")
+            {
+
+                $('#DivChequeBank').show();
+
+                $('#DivBankCash').show();
+
+                $('#DivDeferred').hide();
+
+
+                $('#Loan_PaidAmount').val('');
+
+                $('#Loan_RemainedAmount').val('');
+
+
+                $('#Cash_Amount').val('');
+
+                $('#Bank_Amount').val('');
+
+
+			}
+            else if (PayVal == '@Const.Deffered')
+            {
+
+                $('#DivChequeBank').hide();
+
+                $('#DivBankCash').hide();
+
+                $('#DivDeferred').show();
+
+
+                $('#Loan_PaidAmount').val('');
+
+                $('#Loan_RemainedAmount').val('');
+
+
+                $('#Cash_Amount').val('');
+
+                $('#Bank_Amount').val('');
+
+
+			}
+
+
+
+        }
+
+
+
+		$(':input').keypress(function (e)
+		{
+
+
+
+			if (e.keyCode == 13 || e.keyCode == 10)
+			{
+
+
+            e.preventDefault();
+
+
+			if ($.trim($("#BarCode").val()) == "")
+			{
+
+                @*toastr.error('@ZeroRes.Required');*@
+
+                return false;
+
+			}
+
+
+
+            var BarCode = $("#BarCode").val(),
+
+
+             CounxVal = document.getElementById("Counx").value;
+
+            if (CounxVal == 0)
+            {
+
+                document.getElementById("Counx").value = 1;
+
+                CounxVal++;
+
+            }
+            else
+            {
+
+                CounxVal++;
+
+
+                document.getElementById("Counx").value = CounxVal;
+
+            }
+
+
+
+                OrdersDynamicTable = $("#OrdersOrdersDynamicTable tbody");
+
+
+            var input = { serial: BarCode };
+
+
+            var urlx = "/Inventory/SaleBills/GetSerialItemInfo";
+
+
+
+            $.ajax({
+
+                url: urlx,
+
+                type: 'GET',
+
+                DataType: 'json',
+
+                //data: JSON.stringify(input),
+
+                contentType: 'application/json; charset=utf-8',
+
+                data: input,
+
+				success: function (Data)
+                {
+
+
+
+					if (Data.Name != undefined)
+					{
+
+
+                        var productItem = '<tr> <td>' + Data.Name + '</td>  <td> <input  type="text" id="QTY_' + CounxVal + '" class="NumberPicker"  value=' + Data.Quantity + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcQty(this)" /> </td>  <td id="Price_' + CounxVal + '" >' + Data.SellPrice + '</td>  <td style = "display:none;">' + Data.ID + '</td>  <td id="RemQTY_' + CounxVal + '" style="display:none;">0</td> <td style="display:none;">' + Data.UnitType_ID +'</td>  <td> <p aria-label="@ZeroRes.Remove" class="hint--top-right hint--error"> <a data-itemId="0" href="#" style="color:red;" class="deleteItem btn btn-small glyphicon glyphicon-trash  hvr-bounce-out"> </a> </p> </td> </tr>';
+
+
+
+							OrdersDynamicTable.append(productItem);
+
+							clearItem();
+
+
+
+							var BillTotal = document.getElementById("PriceTotal").value;
+
+
+							if (BillTotal == 0)
+							{
+
+								document.getElementById("PriceTotal").value = " ";
+
+								var Total = document.getElementById("PriceTotal").value + Number(Data.SellPrice);
+
+								document.getElementById("PriceTotal").value = Total;
+                                document.getElementById("PriceTotalLbl").value = Total;
+
+								//var CounCategory = document.getElementById("CounCategories").value;
+
+								//document.getElementById("CounCategories").value = Number(CounCategory) + 1;
+
+
+							}
+							else
+							{
+
+								var Total = document.getElementById("PriceTotal").value;
+
+								var SDX = Number(Total) + Number(Data.SellPrice);
+
+								document.getElementById("PriceTotal").value = SDX;
+                                document.getElementById("PriceTotalLbl").value = SDX;
+
+								//var CounCategory = document.getElementById("CounCategories").value;
+
+								//document.getElementById("CounCategories").value = Number(CounCategory) + 1;
+
+							}
+
+
+						$("#BarCode").focus();
+
+						//var Quan_ID = "#QTY_" + CounxVal;
+
+						//$(Quan_ID).numbercontrol();
+
+
+
+					}
+					else  if (Data.Status = "BarCode Not Found!")
+                    {
+
+						alert("BarCode Not Found!");
+
+						clearItem();
+
+					}
+					else
+					{
+							window.location.reload();
+					}
+
+
+
+                },
+                error: function ()
+                {
+					window.location.reload();
+                }
+
+
+			});
+
+
+	    }
+
+
+    });
+
+
+
+
+        function CalcQty(RS)
+        {
+
+
+            if (RS.value != 0 && RS.value != "")
+            {
+
+
+                var QTYVal = RS.value;
+
+                var QTY_ID = RS.getAttribute('id');
+
+                var Numb = QTY_ID.substring(4, 5);
+
+
+                var PriceID = "#Price_" + Numb;
+
+                var PriceVal = $(PriceID).html();
+
+
+                var RemQTY_ID = "#RemQTY_" + Numb;
+
+                var RemQTY_Val = $(RemQTY_ID).html();
+
+
+                var BillVal = document.getElementById('PriceTotal').value;
+
+
+
+
+
+                if (RemQTY_Val == "0")
+                {
+
+                    var RemQTY_IDJS = "RemQTY_" + Numb;
+
+                    document.getElementById(RemQTY_IDJS).innerHTML = QTYVal;
+
+                    QTYVal--;
+
+                    var Total = Number(PriceVal) * Number(QTYVal)
+
+                    document.getElementById('PriceTotal').value = Number(BillVal) + Number(Total);
+                    document.getElementById('PriceTotalLbl').value = Number(BillVal) + Number(Total);
+
+                }
+                else
+                {
+
+                    var MinusVal = Number(RemQTY_Val) * Number(PriceVal);
+
+                    var BillMinusVal = document.getElementById('PriceTotal').value;
+
+                    var CurrenVal = Number(BillMinusVal) - Number(MinusVal);
+
+
+
+                    var Total = Number(PriceVal) * Number(QTYVal);
+
+
+                    document.getElementById('PriceTotal').value = Number(CurrenVal) + Number(Total);
+                    document.getElementById('PriceTotalLbl').value = Number(CurrenVal) + Number(Total);
+
+                }
+
+
+
+
+            }
+            else
+            {
+
+                alert('Empty Value Quantity !');
+
+                return false;
+
+
+            }
+
+
+
+        }
+
+
+
+
+        function DuplecatBillVal()
+        {
+
+
+            if ($('#SMBillVal').is(':checked'))
+            {
+
+                var BillVal = document.getElementById('SMBill').value;
+
+                var EstimatedVal = document.getElementById('EstimatedAmount').value;
+
+
+                if (EstimatedVal != 0)
+                {
+
+                    BillVal = EstimatedVal;
+
+                }
+
+                document.getElementById('RecievAmount').value = BillVal;
+
+                document.getElementById('RecievAmount').readOnly = true;
+
+            }
+            else
+            {
+
+                document.getElementById('RecievAmount').value = 0;
+
+
+                document.getElementById('RecievAmount').readOnly = false;
+
+            }
+
+
+
+        }
+
+
+
+
+        function SalesDaily()
+        {
+
+
+            $.ajax({
+
+                contentType: 'application/json; charset=utf-8',
+
+                dataType: 'json',
+
+                type: 'GET',
+
+                url: "/Inventory/SaleBills/GetInfoSalesDialy",
+
+                success: function (Data)
+                {
+
+                    if (Number(Data.CashOnHand) != 0)
+                    {
+
+                        $('.CashOnHand').html(Data.CashOnHand);
+
+                        $('.SaleCash').html(Data.CashSale);
+
+                        $('.SaleBank').html(Data.BankSale);
+
+                        $('.TotalSales').html(Data.TotalSales);
+
+                        $('.TotalExpenses').html(Data.TotalExpenses);
+
+                        $('.TotalCasher').html(Data.TotalCash);
+
+
+                    }
+                    else
+                    {
+                        window.location.reload();
+                    }
+
+
+                },
+                error: function ()
+                {
+                    alert("Error!")
+
+                    window.location.reload();
+
+                }
+
+
+            });
+
+
+        }
+
+
+
+        function ClosedSalesDialy()
+        {
+
+
+            $.ajax({
+
+                contentType: 'application/json; charset=utf-8',
+
+                dataType: 'json',
+
+                type: 'GET',
+
+                url: "/Inventory/SaleBills/ClosedSalesDialy",
+
+
+                success: function (Data)
+                {
+
+                    if (Data.Status == "Done")
+                    {
+                        window.location.href = '@Url.Action("Login", "Account" , new { Area = ""})';
+                    }
+
+
+                },
+                error: function ()
+                {
+                    alert("Error!")
+                }
+
+
+            });
+
+
+		}
+
+
+
+
+
+
+
+
+        //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+        function clearItem()
+        {
+            $("#BarCode").val('');
+        }
+
+
+
+
+        // After Add A New Order In The List, If You Want, You Can Remove It.
+        $(document).on('click', 'a.deleteItem', function (e)
+        {
+            debugger
+            e.preventDefault();
+
+            var $self = $(this);
+
+			if ($(this).attr('data-itemId') == "0")
+			{
+
+				$(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function ()
+				{
+
+					$(this).remove();
+
+                    CalcBillTotal();
+					//var SellVal = $(this).find('td:eq(2)').text();
+
+					//var BillTotal = document.getElementById("PriceTotal").value;
+
+					//BillTotal -= SellVal;
+
+     //               document.getElementById("PriceTotal").value = BillTotal;
+
+
+
+                    var CounCategory = document.getElementById("CounCategories").value;
+
+                    document.getElementById("CounCategories").value = Number(CounCategory) - 1;
+
+
+
+                });
+
+            }
+
+        });
+
+
+
+
+
+        //After Click Save Button Pass All Data View To Controller For Save Database
+        function saveOrder(data)
+        {
+
+            return $.ajax({
+
+                contentType: 'application/json; charset=utf-8',
+
+                dataType: 'json',
+
+                type: 'POST',
+
+				url: "/Inventory/SaleBills/SaleCreate",
+
+                data: data,
+
+                success: function (result)
+                {
+
+                    debugger
+                    if (result.Status == "A4")
+                    {
+
+                        var NoBillVal = document.getElementById('NoBill').value;
+
+                        ClearPageSale();
+
+                        document.getElementById('NoBill').value = Number(NoBillVal) + 1;
+
+						toastr.success('@ZeroRes.SavedSuccessfully');
+
+                        window.open("/Inventory/SaleBills/RPTCasher/" + result.Bill_Id, 'mywindow', 'fullscreen=yes, scrollbars=auto');
+
+
+
+                    }
+                    else if (result.Status == "Done")
+                    {
+
+                        var NoBillVal = document.getElementById('NoBill').value;
+
+                        ClearPageSale();
+
+                        document.getElementById('NoBill').value = Number(NoBillVal) + 1;
+
+						toastr.success('@ZeroRes.SavedSuccessfully');
+
+                        //window.open("/Inventory/SaleBills/RPTCasher/" + result.Bill_Id, 'mywindow', 'fullscreen=yes, scrollbars=auto');
+
+
+
+
+						var leftPosition, topPosition;
+
+						var width = "450px", height = "750px";
+
+						var W = "650px", H = "850px";
+
+						//Allow for borders.
+						leftPosition = (window.screen.width / 2) - ((W / 2) + 10);
+
+						//Allow for title and status bars.
+						topPosition = (window.screen.height / 2) - ((H / 2) + 50);
+
+						//Open the window.
+                        window.open("/Inventory/SaleBills/RPTCasher?ID=" + result.Bill_Id+"" , 'SaleBill',
+							"status=no,height=" + height + ",width=" + width + ",resizable=yes,left="
+							+ leftPosition + ",top=" + topPosition + ",screenX=" + leftPosition + ",screenY="
+							+ topPosition + ",toolbar=no,menubar=no,scrollbars=no,location=no,directories=no");
+
+
+
+
+                    }
+                    else
+                    {
+                        window.location.reload();
+                    }
+
+
+
+                },
+                error: function ()
+                {
+                    toastr.error('@ZeroRes.NotSave');
+
+                    window.location.reload();
+
+                }
+
+
+            });
+
+		}
+
+
+
+        function ClearPageSale() {
+
+
+            $('#PriceTotal').val('0');
+
+            $('#CounCategories').val('0');
+
+            $('#Discount').val('0');
+
+            $('#BarCode').val('');
+
+
+            $('#RateBillVAT').val('');
+
+            $('#OrdersOrdersDynamicTable tbody').empty();
+
+            $('#PaymentType').val('Cash');
+
+            $('#Company_ID').val('1');
+
+
+            $('#SMBill').val('0');
+
+            $('#EstimatedAmount').val('0');
+
+            $('#RecievAmount').val('0');
+
+            $('#RecievAmount').val('0');
+
+            $('#RemindAmount').val('0');
+
+
+
+            $('#DivBankCash').hide();
+
+            $('#DivDeferred').hide();
+
+
+            $('#DivChequeBank').hide();
+
+
+
+            $('#Loan_PaidAmount').val('');
+
+            $('#Loan_RemainedAmount').val('');
+
+
+            $('#Cash_Amount').val('');
+
+            $('#Bank_Amount').val('');
+
+
+
+            document.getElementById('SMBillVal').checked = false;
+
+
+
+        }
+
+
+
+
+        //Collect Multiple Order List For Pass To Controller
+        $("#saveOrder").click(function (e)
+        {
+
+
+			e.preventDefault();
+
+
+
+
+			var PayVal = document.getElementById('PaymentType').value;
+
+			var CashVal = document.getElementById('CashAmount').value;
+
+			var BankVal = document.getElementById('BankAmount').value;
+
+			var ChequeBankVal = document.getElementById('ChequeBank').value;
+
+			if (PayVal == "CashBank")
+			{
+
+				if (CashVal == 0 || CashVal == "" || BankVal == 0 || BankVal == "")
+				{
+					toastr.error('الرجاء مراجعة مبلغ النقد او مبلغ البنك !');
+
+					return false
+				}
+				else if (ChequeBankVal == "")
+				{
+					toastr.error('الرجاء اختيار اسم البنك !');
+
+					$("#PayModal").modal('toggle');
+
+					document.getElementById('ChequeBank').focus();
+
+					return false
+				}
+
+
+			}
+
+
+
+		    var RecpVal = document.getElementById('RecievAmount').value;
+
+			if (RecpVal == 0 || RecpVal == "")
+			{
+				toastr.error('المبلغ المستلم اقل من 1');
+
+				return false
+			}
+
+
+
+            var TypeOrder = document.getElementById('OrderType').value;
+
+            if (TypeOrder == 0 || TypeOrder == "")
+            {
+
+                toastr.error('الرجاء اختيار نوع الطلب');
+
+                return false
+            }
+
+
+
+			$("#PayModal").modal('toggle');
+
+
+					var orderArr = [];
+
+					orderArr.length = 0;
+
+            $.each($("#OrdersOrdersDynamicTable tbody tr"), function ()
+            {
+                debugger
+						orderArr.push(
+							{
+
+
+								Name: $(this).find('td:eq(0)').html(),
+
+								NewQuantity: $(this).find('td:eq(4) input').val(),
+
+                                SellPrice: $(this).find('td:eq(3) input').val(),
+
+								ID: $(this).find('td:eq(1)').html(),
+
+								UnitType_ID: $(this).find('td:eq(5)').html(),
+
+							});
+
+
+					});
+
+
+					var CheqBankVal = "";
+
+					var VGB = $("#ChequeBank").css("display");
+
+					if (VGB != "none")
+					{
+						CheqBankVal = $("#ChequeBank").val()
+					}
+
+
+
+            debugger
+					var data = JSON.stringify(
+						{
+
+
+							NoBill: $('#NoBill').val(),
+
+							PriceTotal: $('#PriceTotal').val(),
+
+							Inventory_ID: $('#Inventory_ID').val(),
+
+							Discount: $('#Discount').val(),
+
+							PaymentType: $('#PaymentType').val(),
+
+							Company_ID: $('#Company_ID').val(),
+
+
+							EstimatedAmount: $('#EstimatedAmount').val(),
+
+							RecievAmount: $('#RecievAmount').val(),
+
+							RemindAmount: $('#RemindAmount').val(),
+
+
+							ChequeBank: CheqBankVal,
+
+							RateBillVAT: $('#RateBillVAT').val(),
+
+
+							CashAmount: $('#CashAmount').val(),
+
+							BankAmount: $('#BankAmount').val(),
+                            OrderType: $('#OrderType').val(),
+                            Table_ID: $('#Table_ID').val(),
+                            DelevryMan_ID: $('#DelevryMan_ID').val(),
+
+							vmSellItems: orderArr
+
+
+						});
+
+
+					if (orderArr.length != 0)
+					{
+
+
+						$.when(saveOrder(data)).then(function (response)
+						{
+							console.log(response);
+
+						}).fail(function (err)
+						{
+							console.log(err);
+						});
+
+					}
+					else
+					{
+						toastr.error('@ZeroRes.InsertItems');
+				    }
+
+
+
+
+		});
+
+
+
+		function myPendingOrder()
+		{
+
+
+            var orderArr = [];
+
+            orderArr.length = 0;
+
+            $.each($("#OrdersOrdersDynamicTable tbody tr"), function ()
+            {
+
+                orderArr.push(
+                    {
+
+                        Name: $(this).find('td:eq(0)').html(),
+
+                        NewQuantity: $(this).find('td:eq(1) input').val(),
+
+                        SellPrice: $(this).find('td:eq(2)').html(),
+
+                        ID: $(this).find('td:eq(3)').html(),
+
+
+                    });
+
+            });
+
+
+
+
+            var data = JSON.stringify(
+                {
+
+                    NoBill: $('#NoBill').val(),
+
+                    PriceTotal: $('#PriceTotal').val(),
+
+                    Inventory_ID: $('#Inventory_ID').val(),
+
+                    Discount: $('#Discount').val(),
+
+                    PaymentType: $('#PaymentType').val(),
+
+                    Company_ID: $('#Company_ID').val(),
+
+                    RateBillVAT: $('#RateBillVAT').val(),
+                    OrderType: $('#OrderType').val(),
+                    Table_ID: $('#Table_ID').val(),
+                    DelevryMan_ID: $('#DelevryMan_ID').val(),
+                    vmSellItems: orderArr
+
+
+                });
+
+
+            if (orderArr.length != 0)
+            {
+
+
+				$.when(PendingOrder(data)).then(function (response)
+                {
+                    console.log(response);
+
+                }).fail(function (err)
+                {
+                    console.log(err);
+                });
+
+
+            }
+            else
+            {
+                toastr.error('@ZeroRes.InsertItems');
+			}
+
+
+
+
+		}
+
+
+
+
+        //Collect Multiple Order List For Pass To Controller
+        $("#SavePendingOrder").click(function (e)
+        {
+            debugger
+
+            e.preventDefault();
+
+            var orderArr = [];
+
+            orderArr.length = 0;
+
+            $.each($("#OrdersOrdersDynamicTable tbody tr"), function ()
+            {
+
+                orderArr.push(
+                    {
+
+
+                        Name: $(this).find('td:eq(0)').html(),
+
+                        NewQuantity: $(this).find('td:eq(4) input').val(),
+
+                        SellPrice: $(this).find('td:eq(3) input').val(),
+
+                        ID: $(this).find('td:eq(1)').html(),
+
+                        UnitType_ID: $(this).find('td:eq(5)').html(),
+
+                    });
+
+
+            });
+
+
+
+
+
+            var data = JSON.stringify(
+                {
+
+                    NoBill: $('#NoBill').val(),
+
+                    PriceTotal: $('#PriceTotal').val(),
+
+                    Inventory_ID: $('#Inventory_ID').val(),
+
+                    Discount: $('#Discount').val(),
+
+                    PaymentType: $('#PaymentType').val(),
+
+                    Company_ID: $('#Company_ID').val(),
+
+                    RateBillVAT: $('#RateBillVAT').val(),
+                    OrderType: $('#OrderType').val(),
+                    Table_ID: $('#Table_ID').val(),
+                    DelevryMan_ID: $('#DelevryMan_ID').val(),
+                    vmSellItems: orderArr
+
+
+                });
+
+
+            if (orderArr.length != 0)
+            {
+
+
+				$.when(PendingOrder(data)).then(function (response)
+                {
+                    console.log(response);
+
+                }).fail(function (err)
+                {
+                    console.log(err);
+                });
+
+
+            }
+            else
+            {
+                toastr.error('@ZeroRes.InsertItems');
+            }
+
+
+        });
+
+        function BillView(Id) {
+            window.open("/Inventory/SaleBills/SaleCreateNew?PBill=" + Id);
+        }
+
+
+        function GetBillsList()
+        {
+
+            return $.ajax({
+
+                contentType: 'application/json; charset=utf-8',
+
+                dataType: 'json',
+
+                type: 'POST',
+
+                url: "/Inventory/SaleBills/PendingBillsList",
+
+
+
+                success: function (result)
+                {
+
+                    if (result.Status == "Done")
+                    {
+                        debugger
+                        var Data = result.PindingBills;
+                        var temp = "";
+                        for (var i = 0; i < Data.length; i++) {
+                            temp = '<tr id="' + Data[i].NoBill + '"><td>' + Data[i].NoBill + '</td> <td>' + Data[i].PaymentType + '</td> <td> ' + Data[i].Discount + ' </td> <td>' + Data[i].PriceTotal + '</td><td>' + Data[i].EnteredDate + '</td> <td><a data-itemId="0" herf="#" onclick="BillView(' + Data[i].ID  +')" class="btn btn-primary glyphicon glyphicon-edit  hvr-bounce-out"><p aria-label=" @ZeroRes.BackSaleBill" class="hint--top-right hint--info"></p></a></td></tr>';
+
+                            $("#PindingBillsTable tbody").append(temp);
+
+                        }
+
+
+                        $("#PendingModal").modal();
+                        @*window.location.href = '@Url.Action("SaleCreate", "SaleBills", new {Area = "Inventory" })';*@
+
+						//var NoBillVal = document.getElementById('NoBill').value;
+
+                        //ClearPageSale();
+
+                        //document.getElementById('NoBill').value = Number(NoBillVal) + 1;
+
+
+						//toastr.success('@ZeroRes.SavedSuccessfully');
+
+                    }
+
+                },
+                error: function ()
+                {
+                    debugger
+                    toastr.error('@ZeroRes.NotSave');
+
+
+                }
+
+
+            });
+
+        }
+
+         //After Click Save Button Pass All Data View To Controller For Save Database
+        function PendingOrder(data)
+        {
+
+            return $.ajax({
+
+                contentType: 'application/json; charset=utf-8',
+
+                dataType: 'json',
+
+                type: 'POST',
+
+                url: "/Inventory/SaleBills/BillsPending",
+
+                data: data,
+
+                success: function (result)
+                {
+
+                    if (result.Status == "Done")
+                    {
+                        debugger
+                        var Data = result.PindingBills;
+                        var temp = "";
+                        for (var i = 0; i < Data.length; i++) {
+                            temp = '<tr id="' + Data[i].NoBill + '"><td>' + Data[i].NoBill + '</td> <td>' + Data[i].PaymentType + '</td> <td> ' + Data[i].Discount + ' </td> <td>' + Data[i].PriceTotal + '</td><td>' + Data[i].EnteredDate + '</td> <td><a data-itemId="0" herf="#" onclick="BillView(' + Data[i].ID  +')" class="btn btn-primary glyphicon glyphicon-edit  hvr-bounce-out"><p aria-label=" @ZeroRes.BackSaleBill" class="hint--top-right hint--info"></p></a></td></tr>';
+
+                            $("#PindingBillsTable tbody").append(temp);
+
+                        }
+
+
+                        $("#PendingModal").modal();
+                        @*window.location.href = '@Url.Action("SaleCreate", "SaleBills", new {Area = "Inventory" })';*@
+
+						var NoBillVal = document.getElementById('NoBill').value;
+
+                        ClearPageSale();
+
+                        document.getElementById('NoBill').value = Number(NoBillVal) + 1;
+
+
+						toastr.success('@ZeroRes.SavedSuccessfully');
+
+                    }
+
+                },
+                error: function ()
+                {
+                    debugger
+                    toastr.error('@ZeroRes.NotSave');
+
+
+                }
+
+
+            });
+
+        }
+
+
+
+    </script>
+
+    @*//////////////////////////////////////scrollSpeed/////////////////////////////////////////////////*@
+
+    <script>
+        $(document).ready(function () {
+            // $fn.scrollSpeed(step, speed, easing);
+            jQuery.scrollSpeed(200, 800);
+        });
+
+        // Custom scrolling speed with jQuery
+        // Source: github.com/ByNathan/jQuery.scrollSpeed
+        // Version: 1.0.2
+
+        (function ($) {
+
+            jQuery.scrollSpeed = function (step, speed, easing) {
+
+                var $document = $(document),
+                    $window = $(window),
+                    $body = $('html, body'),
+                    option = easing || 'default',
+                    root = 0,
+                    scroll = false,
+                    scrollY,
+                    scrollX,
+                    view;
+
+                if (window.navigator.msPointerEnabled)
+
+                    return false;
+
+                $window.on('mousewheel DOMMouseScroll', function (e) {
+
+                    var deltaY = e.originalEvent.wheelDeltaY,
+                        detail = e.originalEvent.detail;
+                    scrollY = $document.height() > $window.height();
+                    scrollX = $document.width() > $window.width();
+                    scroll = true;
+
+                    if (scrollY) {
+
+                        view = $window.height();
+
+                        if (deltaY < 0 || detail > 0)
+
+                            root = (root + view) >= $document.height() ? root : root += step;
+
+                        if (deltaY > 0 || detail < 0)
+
+                            root = root <= 0 ? 0 : root -= step;
+
+                        $body.stop().animate({
+
+                            scrollTop: root
+
+                        }, speed, option, function () {
+
+                            scroll = false;
+
+                        });
+                    }
+
+                    if (scrollX) {
+
+                        view = $window.width();
+
+                        if (deltaY < 0 || detail > 0)
+
+                            root = (root + view) >= $document.width() ? root : root += step;
+
+                        if (deltaY > 0 || detail < 0)
+
+                            root = root <= 0 ? 0 : root -= step;
+
+                        $body.stop().animate({
+
+                            scrollLeft: root
+
+                        }, speed, option, function () {
+
+                            scroll = false;
+
+                        });
+                    }
+
+                    return false;
+
+                }).on('scroll', function () {
+
+                    if (scrollY && !scroll) root = $window.scrollTop();
+                    if (scrollX && !scroll) root = $window.scrollLeft();
+
+                }).on('resize', function () {
+
+                    if (scrollY && !scroll) view = $window.height();
+                    if (scrollX && !scroll) view = $window.width();
+
+                });
+            };
+
+            jQuery.easing.default = function (x, t, b, c, d) {
+
+                return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+            };
+
+        })(jQuery);
+    </script>
+
+
+
+    @*//////////////////////////////////////scrollSpeed/////////////////////////////////////////////////*@
+
+
+
+
+
+    <script>
+
+
+        //////////////////////get val 1 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn1").click(function () {
+                $("#test3").val("1");
+            });
+
+
+        });
+
+        //////////////////////////////////////////////
+
+
+        //////////////////////get val 2 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn2").click(function () {
+                $("#test3").val("2");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+        //////////////////////get val 3 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn3").click(function () {
+                $("#test3").val("3");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+
+        //////////////////////get val 4 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn4").click(function () {
+                $("#test3").val("4");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+
+        //////////////////////get val 5 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn5").click(function () {
+                $("#test3").val("5");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+        //////////////////////get val 6 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn6").click(function () {
+                $("#test3").val("6");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+        //////////////////////get val 7 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn7").click(function () {
+                $("#test3").val("7");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+        //////////////////////get val 8 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn8").click(function () {
+                $("#test3").val("8");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+
+        //////////////////////get val 9 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn9").click(function () {
+                $("#test3").val("9");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+
+
+
+        //////////////////////get val 0 ////////////////////////
+
+        $(document).ready(function () {
+
+            $("#btn0").click(function () {
+                $("#test3").val("0");
+            });
+        });
+
+        //////////////////////////////////////////////
+
+
+
+
+
+        //Adding to the expression
+
+        $(".design").click(function () {
+            debugger
+            if (!$(this).hasClass("not")) {
+                var Row = $('#QTY_' + RowID);
+                var pr = $('#Price_' + RowID);
+                var tot = $('#Total_' + RowID);
+                if (Row.val() == 0) {
+                    Row.val($(this).text());
+                    var NewTot = Number(Row.val()) * Number(pr.val());
+                    tot.val(NewTot);
+                    CalcBillTotal();
+                }
+                else {
+                    var a = Row.val();
+                    var b = $(this).text();
+                    Row.val(Row.val() + $(this).text());
+                    var NewTot = Number(Row.val()) * Number(pr.val());
+                    tot.val(NewTot);
+                    CalcBillTotal();
+                }
+            }
+        });
+
+
+        // All Clear
+        $("#allClear").click(function () {
+            var Row = $('#QTY_' + RowID);
+            var pr = $('#Price_' + RowID);
+            var tot = $('#Total_' + RowID);
+            $('#QTY_' + RowID).val("0");
+            var NewTot = Number(Row.val()) * Number(pr.val());
+            tot.val(NewTot);
+            CalcBillTotal();
+
+        });
+
+        // All Clear
+        $("#btnDot").click(function () {
+
+        });
+
+        function CalcTotal(IV, ID) {
+            debugger
+
+            if (IV.value != 0 && IV.value != "") {
+                var total = $("#Total_" + ID);
+                var QTY = $("#QTY_" + ID).val();
+                var Price = $("#Price_" + ID).val();
+                var newTotal = Number(QTY) * Number(Price);
+                total.val(newTotal);
+                CalcBillTotal();
+            }
+        }
+
+
+        function CalcTotalByClick(IV, ID) {
+            debugger
+            if (IV.value != 0 && IV.value != "") {
+                var total = $("#Total_" + ID);
+                var QTY = $("#QTY_" + ID).val();
+                var Price = $("#Price_" + ID).val();
+                var newTotal = (Number(QTY) + 1) * Number(Price);
+                total.val(newTotal);
+                $("#QTY_" + ID).val(Number(QTY) + 1);
+            }
+        }
+
+        function AddToTable(ID, name, price, quantaty) {
+            debugger
+            var OrderOrdersDynamicTable = $("#OrdersOrdersDynamicTable");
+            if ($("#Total_" + ID).length) {
+                var item = $("QTY_" + ID );
+                CalcTotalByClick(item, ID);
+                CalcBillTotal();
+            } else {
+                var total = Number(price) * Number(quantaty);
+                var productItem = "";
+                if ('@ViewBag.EnableSale' == '@Const.Yes') {
+                    productItem = '<tr id="' + ID + '" onclick="PinRow(' + ID + ')"><td>' + name + '</td> <td style="display:none">' + ID + '</td> <td style="display:none"><input type="text"  value = ' + price + ' /></td> <td><input class="text-center" type="number" id="Price_' + ID + '" style="border:none"  value=' + price + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,' + ID + ')" /></td>   <td><input  type="number" id="QTY_' + ID + '" class="NumberPicker text-center"  value=' + quantaty + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,' + ID + ')" /></td> <td><input class="text-center" style="border:none" id="Total_' + ID + '" readonly type="text"   value = ' + total + ' /></td><td> <p aria-label="@ZeroRes.Remove" class="hint--top-right hint--error"> <a data-itemId="0" c"#" style="color:red;" class="deleteItem btn btn-small glyphicon glyphicon-trash  hvr-bounce-out"> </a> </p> </td></tr>';
+                } else {
+                    // Bind form values in HTML row tamplate
+                    productItem = '<tr id="' + ID + '" onclick="PinRow(' + ID + ')"><td>' + name + '</td> <td style="display:none">' + ID + '</td> <td style="display:none"><input id="Price_' + ID + '" type="text"  value = ' + price + ' /></td> <td>' + price + '</td>   <td><input  type="number" class="text-center" id="QTY_' + ID + '"   value=' + quantaty + ' min="1" max="100" style="border:none;width:55px;" onchange="CalcTotal(this,' + ID + ')" /></td> <td><input class="text-center" style="border:none" id="Total_' + ID + '" readonly type="text"   value = ' + total + ' /></td><td> <p aria-label="@ZeroRes.Remove" class="hint--top-right hint--error"> <a data-itemId="0" href="#" style="color:red;" class="deleteItem btn btn-small glyphicon glyphicon-trash  hvr-bounce-out"> </a> </p> </td></tr>';
+                }
+
+            // add the row to table
+            OrderOrdersDynamicTable.append(productItem);
+            }
+            CalcBillTotal();
+            var BillTotal = document.getElementById("PriceTotal").value;
+
+
+            if (BillTotal == 0) {
+
+                document.getElementById("PriceTotal").value = " ";
+
+                var Total = document.getElementById("PriceTotal").value + Number(price);
+
+                document.getElementById("PriceTotal").value = Total;
+                document.getElementById("PriceTotalLbl").value = Total;
+
+                //var CounCategory = document.getElementById("CounCategories").value;
+
+                //document.getElementById("CounCategories").value = Number(CounCategory) + 1;
+
+
+            }
+            //else {
+
+            //    var Total = document.getElementById("PriceTotal").value;
+
+            //    var SDX = Number(Total) + Number(price);
+
+            //    document.getElementById("PriceTotal").value = SDX;
+
+
+            //    //var CounCategory = document.getElementById("CounCategories").value;
+
+            //    //document.getElementById("CounCategories").value = Number(CounCategory) + 1;
+
+            //}
+
+        }
+
+
+        // function show col  5
+
+        function myFunction(ID) {
+            var x = document.getElementById(ID);
+            $(".MenuList").css("display", "none");
+            if (x.style.display === "none") {
+
+                x.style.display = "block";
+
+            }
+
+            else {
+
+                x.style.display = "none";
+
+            }
+        }
+
+    </script>
+
+
+
+
+}
+
+<style>
+    .btn {
+        font-weight: 900;
+        font-size: large;
+        display: inline-block;
+        padding: 13px 25px;
+        margin-bottom: 0;
+        font-size: 17px;
+        /*font-weight: 400;*/
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        margin-top: 9px;
+        margin-left: 5px;
+    }
+
+
+
+    .btn2 {
+        font-weight: 900;
+        font-size: large;
+        display: inline-block;
+        padding: 13px 25px;
+        margin-bottom: 0;
+        font-size: 14px;
+        /*font-weight: 400;*/
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        margin-top: 9px;
+        margin-left: 5px;
+    }
+
+    .box-header > .box-tools {
+        position: absolute;
+        right: 10px;
+        top: -10px;
+    }
+</style>
